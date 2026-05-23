@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+venv/
+chatbot_model/
+chatbot_model_final/
+__pycache__/
+*.pyc
