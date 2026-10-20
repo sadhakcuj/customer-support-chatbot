@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: support-chatbot
+    runtime: docker
+    plan: free
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: BOT_API_KEYS
+        generateValue: true
+      - key: ANTHROPIC_API_KEY      # optional: enables LLM answers grounded in the knowledge base
+        sync: false
+      - key: BOT_ESCALATION_WEBHOOK_URL   # your n8n webhook URL
+        sync: false
+      - key: BOT_ESCALATION_WEBHOOK_SECRET
+        generateValue: true

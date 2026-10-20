@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support Chat</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1b1f24; --muted:#5b6572; --line:#d9dee5; --me:#2f5bea; --me-ink:#fff; --bot:#eef1f5; --warn:#b54708; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151a; --card:#1b2027; --ink:#e8ebef; --muted:#9aa5b1; --line:#2f3640; --me:#4a6cf0; --bot:#262d36; --warn:#fdb022; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:640px; margin:0 auto; padding:16px; display:flex; flex-direction:column; height:100dvh; }
+  h1 { font-size:1.25rem; margin:4px 0 12px; }
+  #log { flex:1; overflow-y:auto; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px; }
+  .msg { max-width:85%; padding:8px 12px; border-radius:12px; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .me { align-self:flex-end; background:var(--me); color:var(--me-ink); }
+  .bot { align-self:flex-start; background:var(--bot); }
+  .note { align-self:center; font-size:.8rem; color:var(--warn); }
+  .src { font-size:.75rem; color:var(--muted); margin-top:4px; }
+  form { display:flex; gap:8px; margin-top:12px; }
+  input { flex:1; padding:10px; border:1px solid var(--line); border-radius:8px; background:var(--card); color:inherit; font:inherit; }
+  button { padding:10px 16px; border-radius:8px; border:0; background:var(--me); color:var(--me-ink); font:inherit; font-weight:600; cursor:pointer; }
+  button:disabled { opacity:.6; }
+  input:focus, button:focus-visible { outline:2px solid var(--me); outline-offset:1px; }
+  .hint { color:var(--muted); font-size:.8rem; margin-top:6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Support Chat</h1>
+  <div id="log" role="log" aria-live="polite"></div>
+  <form id="form">
+    <input id="text" maxlength="1000" autocomplete="off" placeholder="Ask about orders, returns, shipping…" aria-label="Your message" required>
+    <button id="send" type="submit">Send</button>
+  </form>
+  <div class="hint">Type "agent" at any time to reach a person.</div>
+</main>
+<script>
+const log = document.getElementById("log"), form = document.getElementById("form"), input = document.getElementById("text"), send = document.getElementById("send");
+let sessionId = null;
+try { sessionId = sessionStorage.getItem("sid"); } catch (e) {}
+
+function add(cls, text, src) {
+  const d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.textContent = text;
+  if (src) { const s = document.createElement("div"); s.className = "src"; s.textContent = src; d.appendChild(s); }
+  log.appendChild(d); log.scrollTop = log.scrollHeight;
+}
+add("bot", "Hi! I can help with orders, shipping, returns and account questions.");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const message = input.value.trim(); if (!message) return;
+  add("me", message); input.value = ""; send.disabled = true;
+  try {
+    const res = await fetch("/demo/chat", { method:"POST", headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ message, session_id: sessionId }) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(res.status === 429 ? "You're sending messages too fast. Please wait a moment." : (typeof data.detail === "string" ? data.detail : "Something went wrong."));
+    sessionId = data.session_id; try { sessionStorage.setItem("sid", sessionId); } catch (e) {}
+    add("bot", data.reply, data.sources.length ? "Based on: " + data.sources[0].question : null);
+    if (data.escalated) add("note", "A person from our team has been notified.");
+  } catch (err) { add("note", err.message); }
+  finally { send.disabled = false; input.focus(); }
+});
+</script>
+</body>
+</html>

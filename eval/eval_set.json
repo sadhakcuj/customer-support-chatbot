@@ -1,0 +1,330 @@
+{
+ "dev": [
+  {
+   "q": "what hours are you guys working",
+   "expect": "hours"
+  },
+  {
+   "q": "is anyone available on weekends",
+   "expect": "hours"
+  },
+  {
+   "q": "I forgot my login credentials",
+   "expect": "password_reset"
+  },
+  {
+   "q": "how can I get back into my account",
+   "expect": "password_reset"
+  },
+  {
+   "q": "can I send this back for a refund",
+   "expect": "returns"
+  },
+  {
+   "q": "how many days do I have to return stuff",
+   "expect": "returns"
+  },
+  {
+   "q": "is there a minimum spend for free delivery",
+   "expect": "free_shipping"
+  },
+  {
+   "q": "who do I email for help",
+   "expect": "contact"
+  },
+  {
+   "q": "do you have a helpline",
+   "expect": "contact"
+  },
+  {
+   "q": "do you accept amex",
+   "expect": "payment"
+  },
+  {
+   "q": "can I use google pay or paypal",
+   "expect": "payment"
+  },
+  {
+   "q": "how soon will my parcel get here",
+   "expect": "delivery_time"
+  },
+  {
+   "q": "what is the fastest shipping option",
+   "expect": "delivery_time"
+  },
+  {
+   "q": "I ordered by mistake, can I cancel it",
+   "expect": "cancel"
+  },
+  {
+   "q": "how safe is my payment information",
+   "expect": "security"
+  },
+  {
+   "q": "is your app on the play store",
+   "expect": "mobile_app"
+  },
+  {
+   "q": "what does the guarantee cover",
+   "expect": "warranty"
+  },
+  {
+   "q": "where is my parcel right now",
+   "expect": "tracking"
+  },
+  {
+   "q": "how can I follow my shipment",
+   "expect": "tracking"
+  },
+  {
+   "q": "I typed the wrong street on my order",
+   "expect": "change_address"
+  },
+  {
+   "q": "are there any coupon codes",
+   "expect": "discounts"
+  },
+  {
+   "q": "do you run black friday sales",
+   "expect": "discounts"
+  },
+  {
+   "q": "the box came smashed and the lamp is broken",
+   "expect": "damaged"
+  },
+  {
+   "q": "they sent me the wrong colour",
+   "expect": "damaged"
+  },
+  {
+   "q": "how many days until the money is back on my card",
+   "expect": "refund_time"
+  },
+  {
+   "q": "can you deliver to the UK",
+   "expect": "international"
+  },
+  {
+   "q": "do you send orders abroad",
+   "expect": "international"
+  },
+  {
+   "q": "I need a tax receipt for my purchase",
+   "expect": "invoice"
+  },
+  {
+   "q": "please erase my account and information",
+   "expect": "account_delete"
+  },
+  {
+   "q": "I want to buy 50 units for my company",
+   "expect": "bulk_orders"
+  },
+  {
+   "q": "what's the capital of France",
+   "expect": null
+  },
+  {
+   "q": "tell me a joke",
+   "expect": null
+  },
+  {
+   "q": "can you write me a poem about cats",
+   "expect": null
+  },
+  {
+   "q": "what is the weather today",
+   "expect": null
+  },
+  {
+   "q": "who won the football match",
+   "expect": null
+  }
+ ],
+ "test": [
+  {
+   "q": "what time do you close on fridays",
+   "expect": "hours"
+  },
+  {
+   "q": "are you working on sundays",
+   "expect": "hours"
+  },
+  {
+   "q": "I can't remember my password",
+   "expect": "password_reset"
+  },
+  {
+   "q": "my account is locked, help me sign in",
+   "expect": "password_reset"
+  },
+  {
+   "q": "what's the policy for sending items back",
+   "expect": "returns"
+  },
+  {
+   "q": "I'd like to return a jacket I bought last week",
+   "expect": "returns"
+  },
+  {
+   "q": "does shipping cost anything",
+   "expect": "free_shipping"
+  },
+  {
+   "q": "how much do I need to spend to avoid delivery charges",
+   "expect": "free_shipping"
+  },
+  {
+   "q": "what's your customer care number",
+   "expect": "contact"
+  },
+  {
+   "q": "I'd like to speak with your team by email",
+   "expect": "contact"
+  },
+  {
+   "q": "do you accept visa and mastercard",
+   "expect": "payment"
+  },
+  {
+   "q": "can I pay using apple pay",
+   "expect": "payment"
+  },
+  {
+   "q": "how many days will shipping take",
+   "expect": "delivery_time"
+  },
+  {
+   "q": "when should I expect my package",
+   "expect": "delivery_time"
+  },
+  {
+   "q": "how do I cancel the order I just placed",
+   "expect": "cancel"
+  },
+  {
+   "q": "I changed my mind about my purchase, stop it",
+   "expect": "cancel"
+  },
+  {
+   "q": "do you encrypt my personal details",
+   "expect": "security"
+  },
+  {
+   "q": "is it secure to give you my credit card",
+   "expect": "security"
+  },
+  {
+   "q": "can I order through an iphone app",
+   "expect": "mobile_app"
+  },
+  {
+   "q": "how long are your products guaranteed",
+   "expect": "warranty"
+  },
+  {
+   "q": "my gadget stopped working after 6 months, is it covered",
+   "expect": "warranty"
+  },
+  {
+   "q": "how do I see where my order is",
+   "expect": "tracking"
+  },
+  {
+   "q": "I need the tracking link for my delivery",
+   "expect": "tracking"
+  },
+  {
+   "q": "can I update the delivery address after ordering",
+   "expect": "change_address"
+  },
+  {
+   "q": "I moved house, change where it ships",
+   "expect": "change_address"
+  },
+  {
+   "q": "do you have any promotions right now",
+   "expect": "discounts"
+  },
+  {
+   "q": "is there a loyalty scheme",
+   "expect": "discounts"
+  },
+  {
+   "q": "my parcel arrived damaged",
+   "expect": "damaged"
+  },
+  {
+   "q": "the screen was cracked when it arrived",
+   "expect": "damaged"
+  },
+  {
+   "q": "when will my refund arrive",
+   "expect": "refund_time"
+  },
+  {
+   "q": "I returned my order two weeks ago and still have no money",
+   "expect": "refund_time"
+  },
+  {
+   "q": "do you ship to australia",
+   "expect": "international"
+  },
+  {
+   "q": "can customers in india order from you",
+   "expect": "international"
+  },
+  {
+   "q": "where do I download my invoice",
+   "expect": "invoice"
+  },
+  {
+   "q": "can you email me a copy of my receipt",
+   "expect": "invoice"
+  },
+  {
+   "q": "how can I close my account permanently",
+   "expect": "account_delete"
+  },
+  {
+   "q": "do you do discounts for large orders",
+   "expect": "bulk_orders"
+  },
+  {
+   "q": "we are a business wanting wholesale prices",
+   "expect": "bulk_orders"
+  },
+  {
+   "q": "who is the president of the united states",
+   "expect": null
+  },
+  {
+   "q": "recommend a good pizza place",
+   "expect": null
+  },
+  {
+   "q": "how do I fix my python code",
+   "expect": null
+  },
+  {
+   "q": "what's 15 times 12",
+   "expect": null
+  },
+  {
+   "q": "tell me about your favourite movie",
+   "expect": null
+  },
+  {
+   "q": "asdfgh qwerty",
+   "expect": null
+  },
+  {
+   "q": "how tall is mount everest",
+   "expect": null
+  },
+  {
+   "q": "translate hello into german",
+   "expect": null
+  }
+ ]
+}

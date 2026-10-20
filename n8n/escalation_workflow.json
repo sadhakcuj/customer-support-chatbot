@@ -1,0 +1,206 @@
+{
+  "name": "Support chatbot escalation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "support-escalation",
+        "authentication": "headerAuth",
+        "options": {}
+      },
+      "id": "w1",
+      "name": "Escalation Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "support-escalation",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE",
+          "name": "Chatbot webhook secret (header X-Webhook-Secret)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a",
+              "name": "summary",
+              "type": "string",
+              "value": "={{ $json.body.reason }} | sentiment: {{ $json.body.sentiment }} | last: {{ $json.body.last_message.slice(0,200) }}"
+            },
+            {
+              "id": "b",
+              "name": "transcript_text",
+              "type": "string",
+              "value": "={{ $json.body.transcript.map(t => t.role + ': ' + t.content).join('\\n') }}"
+            },
+            {
+              "id": "c",
+              "name": "priority",
+              "type": "string",
+              "value": "={{ ['legal_or_chargeback_threat','sustained_negative_sentiment'].includes($json.body.reason) ? 'high' : 'normal' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "w2",
+      "name": "Build ticket",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "REPLACE_SHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Tickets"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "created_at": "={{ $('Escalation Webhook').item.json.body.created_at }}",
+            "session_id": "={{ $('Escalation Webhook').item.json.body.session_id }}",
+            "email": "={{ $('Escalation Webhook').item.json.body.customer_email }}",
+            "priority": "={{ $json.priority }}",
+            "summary": "={{ $json.summary }}",
+            "transcript": "={{ $json.transcript_text }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "w3",
+      "name": "Log ticket (Google Sheets)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        520,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "={{ $env.SLACK_CHANNEL }}",
+        "text": "=:rotating_light: *{{ $json.priority }}* support handoff\n{{ $json.summary }}\nSession: {{ $('Escalation Webhook').item.json.body.session_id }}"
+      },
+      "id": "w4",
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [
+        520,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "conditions": [
+            {
+              "leftValue": "={{ $('Escalation Webhook').item.json.body.customer_email }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ]
+        }
+      },
+      "id": "w5",
+      "name": "Has customer email?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        780,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Escalation Webhook').item.json.body.customer_email }}",
+        "subject": "We received your support request",
+        "message": "Hello,\n\nA member of our team has your conversation and will reply soon.\n\nSupport team",
+        "options": {}
+      },
+      "id": "w6",
+      "name": "Acknowledge by email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1040,
+        60
+      ]
+    }
+  ],
+  "connections": {
+    "Escalation Webhook": {
+      "main": [
+        [
+          {
+            "node": "Build ticket",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build ticket": {
+      "main": [
+        [
+          {
+            "node": "Log ticket (Google Sheets)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Slack": {
+      "main": [
+        [
+          {
+            "node": "Has customer email?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has customer email?": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge by email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -222,3 +222,6 @@ chatbot_model/
 chatbot_model_final/
 __pycache__/
 *.pyc
+
+# Runtime data
+data/feedback.jsonl
